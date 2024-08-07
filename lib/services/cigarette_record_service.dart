@@ -9,12 +9,13 @@ class CigaretteRecordService {
       firestore.FirebaseFirestore.instance;
   final String collectionName = 'cigarettes';
   final SettingsService _settingsService = SettingsService();
-  final Uuid _uuid = Uuid();
+  final Uuid _uuid = const Uuid();
+  static const double defaultPrice = 34.5;
 
   Future<void> addCigaretteRecord(String userId) async {
     // Récupérer les paramètres utilisateur
     model.Settings? settings = await _settingsService.getSettings(userId);
-    double price = settings?.pricePerCigarette ?? 0.0;
+    double price = settings?.pricePerCigarette ?? defaultPrice;
 
     // Créer un nouvel enregistrement de cigarette
     CigaretteRecord newRecord = CigaretteRecord(
@@ -29,6 +30,21 @@ class CigaretteRecordService {
         .collection(collectionName)
         .doc(newRecord.id)
         .set(newRecord.toMap());
+  }
+
+  Future<int> getTodayCigaretteCount(String userId) async {
+    final now = DateTime.now();
+    final startOfDay = DateTime(now.year, now.month, now.day);
+    final endOfDay = DateTime(now.year, now.month, now.day, 23, 59, 59);
+
+    final querySnapshot = await _firestore
+        .collection('cigarettes')
+        .where('userId', isEqualTo: userId)
+        .where('time', isGreaterThanOrEqualTo: startOfDay.toIso8601String())
+        .where('time', isLessThanOrEqualTo: endOfDay.toIso8601String())
+        .get();
+
+    return querySnapshot.docs.length;
   }
 
   Future<List<CigaretteRecord>> getCigaretteRecords(String userId) async {

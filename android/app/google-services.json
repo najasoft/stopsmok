@@ -12,7 +12,12 @@
           "package_name": "com.itformation.smokapp"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "578848477881-m9q4qt079qqanhlvickas9skgvmiqnnr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCQXZDEhu7HQqLn2hmqp3y7U-o0c1RhiB0"
@@ -20,7 +25,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "578848477881-m9q4qt079qqanhlvickas9skgvmiqnnr.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "578848477881-c1195oh1otbaoe5dtoh4s856btustoh5.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.stopsmok"
+              }
+            }
+          ]
         }
       }
     }

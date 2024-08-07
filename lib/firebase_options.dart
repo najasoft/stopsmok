@@ -63,6 +63,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '578848477881',
     projectId: 'smokstop-a6464',
     storageBucket: 'smokstop-a6464.appspot.com',
+    iosClientId: '578848477881-c1195oh1otbaoe5dtoh4s856btustoh5.apps.googleusercontent.com',
     iosBundleId: 'com.example.stopsmok',
   );
 
@@ -72,6 +73,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '578848477881',
     projectId: 'smokstop-a6464',
     storageBucket: 'smokstop-a6464.appspot.com',
+    iosClientId: '578848477881-c1195oh1otbaoe5dtoh4s856btustoh5.apps.googleusercontent.com',
     iosBundleId: 'com.example.stopsmok',
   );
 
@@ -83,4 +85,5 @@ class DefaultFirebaseOptions {
     authDomain: 'smokstop-a6464.firebaseapp.com',
     storageBucket: 'smokstop-a6464.appspot.com',
   );
+
 }
