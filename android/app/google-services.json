@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "578848477881",
+    "project_id": "smokstop-a6464",
+    "storage_bucket": "smokstop-a6464.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:578848477881:android:b9b9f2d515ba67ed264168",
+        "android_client_info": {
+          "package_name": "com.itformation.smokapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCQXZDEhu7HQqLn2hmqp3y7U-o0c1RhiB0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
