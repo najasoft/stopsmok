@@ -3,12 +3,14 @@ class Settings {
   int interval; // Intervalle entre les cigarettes en minutes
   int dailyLimit; // Limite quotidienne de cigarettes
   double pricePerCigarette; // Prix par cigarette
+  DateTime? lastCigaretteTime; // Date et heure de la dernière cigarette
 
   Settings({
     required this.userId,
     this.interval = 60,
     this.dailyLimit = 10,
     this.pricePerCigarette = 0.0,
+    this.lastCigaretteTime,
   });
 
   // Méthode pour convertir un objet Settings en un Map pour Firestore
@@ -18,6 +20,7 @@ class Settings {
       'interval': interval,
       'dailyLimit': dailyLimit,
       'pricePerCigarette': pricePerCigarette,
+      'lastCigaretteTime': lastCigaretteTime?.toIso8601String(),
     };
   }
 
@@ -28,6 +31,9 @@ class Settings {
       interval: map['interval'] ?? 60,
       dailyLimit: map['dailyLimit'] ?? 10,
       pricePerCigarette: map['pricePerCigarette'] ?? 0.0,
+      lastCigaretteTime: map['lastCigaretteTime'] != null
+          ? DateTime.parse(map['lastCigaretteTime'])
+          : null,
     );
   }
 }

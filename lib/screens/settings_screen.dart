@@ -1,79 +1,54 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../providers/cigarette_provider.dart';
+import 'package:stopsmok/models/settings_model.dart';
+import 'package:stopsmok/services/settings_service.dart';
+import 'package:intl/intl.dart';
+import 'package:stopsmok/models/user_model.dart';
 
-class SettingsScreen extends StatefulWidget {
-  @override
-  _SettingsScreenState createState() => _SettingsScreenState();
-}
+// Page des paramètres
+class SettingsScreen extends StatelessWidget {
+  final SettingsService _settingsService = SettingsService();
+  final User user; // Use User instead of userId
 
-class _SettingsScreenState extends State<SettingsScreen> {
-  late TextEditingController _intervalController;
-  late TextEditingController _dailyLimitController;
+  SettingsScreen({required this.user});
 
-  @override
-  void initState() {
-    super.initState();
-
-    // Utilisez addPostFrameCallback pour garantir que le context est complètement initialisé
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final cigaretteProvider =
-          Provider.of<CigaretteProvider>(context, listen: false);
-      _intervalController = TextEditingController(
-          text: cigaretteProvider.interval.inMinutes.toString());
-      _dailyLimitController =
-          TextEditingController(text: cigaretteProvider.dailyLimit.toString());
-    });
-  }
-
-  @override
-  void dispose() {
-    _intervalController.dispose();
-    _dailyLimitController.dispose();
-    super.dispose();
+  Future<Settings?> _fetchSettings() async {
+    return await _settingsService
+        .getSettings(user.id); // Use user.id to fetch settings
   }
 
   @override
   Widget build(BuildContext context) {
-    final cigaretteProvider = Provider.of<CigaretteProvider>(context);
+    return FutureBuilder<Settings?>(
+      future: _fetchSettings(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        } else if (!snapshot.hasData) {
+          return Center(child: Text('No settings found'));
+        }
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Settings'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: _intervalController,
-              decoration: InputDecoration(labelText: 'Interval (minutes)'),
-              keyboardType: TextInputType.number,
-              onChanged: (value) {
-                if (value.isNotEmpty) {
-                  final interval = int.tryParse(value);
-                  if (interval != null) {
-                    cigaretteProvider.setInterval(Duration(minutes: interval));
-                  }
-                }
-              },
-            ),
-            TextField(
-              controller: _dailyLimitController,
-              decoration: InputDecoration(labelText: 'Daily Limit'),
-              keyboardType: TextInputType.number,
-              onChanged: (value) {
-                if (value.isNotEmpty) {
-                  final limit = int.tryParse(value);
-                  if (limit != null) {
-                    cigaretteProvider.setDailyLimit(limit);
-                  }
-                }
-              },
-            ),
-          ],
-        ),
-      ),
+        final settings = snapshot.data!;
+        return Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Settings',
+                  style: Theme.of(context).textTheme.headlineSmall),
+              SizedBox(height: 20),
+              Text('Interval: ${settings.interval} minutes'),
+              SizedBox(height: 10),
+              Text('Price per cigarette: \$${settings.pricePerCigarette}'),
+              SizedBox(height: 10),
+              Text(
+                  'Last cigarette time: ${settings.lastCigaretteTime != null ? DateFormat('yyyy-MM-dd – HH:mm').format(settings.lastCigaretteTime!) : 'N/A'}'),
+              // Add more settings details as needed
+            ],
+          ),
+        );
+      },
     );
   }
 }

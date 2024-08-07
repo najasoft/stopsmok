@@ -13,6 +13,7 @@ class CigaretteRecordService {
   static const double defaultPrice = 34.5;
 
   Future<void> addCigaretteRecord(String userId) async {
+    final now = DateTime.now();
     // Récupérer les paramètres utilisateur
     model.Settings? settings = await _settingsService.getSettings(userId);
     double price = settings?.pricePerCigarette ?? defaultPrice;
@@ -21,7 +22,7 @@ class CigaretteRecordService {
     CigaretteRecord newRecord = CigaretteRecord(
       id: _uuid.v4(),
       userId: userId,
-      time: DateTime.now(),
+      time: now,
       price: price,
     );
 
@@ -30,6 +31,12 @@ class CigaretteRecordService {
         .collection(collectionName)
         .doc(newRecord.id)
         .set(newRecord.toMap());
+
+    // Mise à jour des paramètres utilisateur avec la nouvelle lastCigaretteTime
+    if (settings != null) {
+      settings.lastCigaretteTime = now;
+      await _settingsService.updateSettings(settings);
+    }
   }
 
   Future<int> getTodayCigaretteCount(String userId) async {
