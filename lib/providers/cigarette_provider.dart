@@ -1,26 +1,52 @@
-import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class CigaretteProvider with ChangeNotifier {
-  Duration _interval = Duration(minutes: 60);
-  int _dailyLimit = 10;
-  double _pricePerCigarette = 1.0; // Exemple de prix par cigarette
+class CigaretteState {
+  final Duration interval;
+  final int dailyLimit;
+  final double pricePerCigarette;
 
-  Duration get interval => _interval;
-  int get dailyLimit => _dailyLimit;
-  double get pricePerCigarette => _pricePerCigarette;
+  CigaretteState({
+    required this.interval,
+    required this.dailyLimit,
+    required this.pricePerCigarette,
+  });
+
+  // Method to copy the current state with new values
+  CigaretteState copyWith({
+    Duration? interval,
+    int? dailyLimit,
+    double? pricePerCigarette,
+  }) {
+    return CigaretteState(
+      interval: interval ?? this.interval,
+      dailyLimit: dailyLimit ?? this.dailyLimit,
+      pricePerCigarette: pricePerCigarette ?? this.pricePerCigarette,
+    );
+  }
+}
+
+class CigaretteNotifier extends StateNotifier<CigaretteState> {
+  CigaretteNotifier()
+      : super(CigaretteState(
+          interval: Duration(minutes: 60),
+          dailyLimit: 10,
+          pricePerCigarette: 1.0,
+        ));
 
   void setInterval(Duration newInterval) {
-    _interval = newInterval;
-    notifyListeners();
+    state = state.copyWith(interval: newInterval);
   }
 
   void setDailyLimit(int newLimit) {
-    _dailyLimit = newLimit;
-    notifyListeners();
+    state = state.copyWith(dailyLimit: newLimit);
   }
 
   void setPricePerCigarette(double newPrice) {
-    _pricePerCigarette = newPrice;
-    notifyListeners();
+    state = state.copyWith(pricePerCigarette: newPrice);
   }
 }
+
+final cigaretteProvider =
+    StateNotifierProvider<CigaretteNotifier, CigaretteState>((ref) {
+  return CigaretteNotifier();
+});
